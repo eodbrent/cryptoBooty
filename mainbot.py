@@ -247,4 +247,4 @@ def formError(error):
     return nextTry
 
 
-client.run("NDEzMTMwMDg3NDM3OTU5MTcw.DWUfYg.-ELs7HwjCigSdhTdySbiGSmNYlc")
+client.run("TOKEN")
