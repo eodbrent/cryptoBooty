@@ -8,6 +8,7 @@ import kucoinWrap
 import krakenWrap
 import nanexWrap
 import cryptopiaWrap
+import CoinMarketCap
 import os
 
 Client = discord.Client()
@@ -39,19 +40,19 @@ async def on_message(message):
     if msg.startswith('.'):
         #this is what we want, so split it.  Don't do anything otherwise.
         sp = split[0:]
-        await client.send_message(message.channel, "first = "+sp[0]+" second = "+sp[1])
+        #await client.send_message(message.channel, "first = "+sp[0]+" second = "+sp[1])
         pair = sp[0]
         pair = pair[1:5]
         curr = sp[1]
         if pair == "pair":
-            await client.send_message(message.channel, "Your chosen pair is " + curr)
+            #await client.send_message(message.channel, "Your chosen pair is " + curr)
             pair = curr.upper()
             try:
                 exch = sp[2]
-                await client.send_message(message.channel, "Your preferred exchange is " + exch)
+                #await client.send_message(message.channel, "Your preferred exchange is " + exch)
             except:
                 exch = 'bittrex'
-                await client.send_message(message.channel, "No exchange chosen, default is bittrex.")
+                #await client.send_message(message.channel, "No exchange chosen, default is bittrex.")
                 return
             try:
                 pairMsg = coinData(pair, exch)
@@ -78,7 +79,6 @@ async def on_message(message):
         if hp == "help":
             helpMsg = help()
             await client.send_message(message.author, embed=helpMsg)
-
 
 def coinData(pair, exch):
     exch = exch.lower()
