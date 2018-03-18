@@ -8,6 +8,7 @@ import kucoinWrap
 import krakenWrap
 import nanexWrap
 import cryptopiaWrap
+from boto.s3.connection import S3Connection
 
 Client = discord.Client()
 client = commands.Bot(command_prefix = "?")
@@ -247,5 +248,5 @@ def formError(error):
     nextTry = "```prolog\nERROR: " + error + "\n" + footer + "\n```"
     return nextTry
 
-
-client.run(BOT_TOKEN)
+s3 = S3Connection(os.environ['S3_KEY'], os.environ['S3_SECRET'])
+client.run(s3)
