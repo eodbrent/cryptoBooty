@@ -53,7 +53,6 @@ async def on_message(message):
             except:
                 exch = 'bittrex'
                 #await client.send_message(message.channel, "No exchange chosen, default is bittrex.")
-                return
             try:
                 pairMsg = coinData(pair, exch)
                 await client.send_message(message.channel, embed=pairMsg)
@@ -79,7 +78,9 @@ async def on_message(message):
         if hp == "help":
             helpMsg = help()
             await client.send_message(message.author, embed=helpMsg)
-
+        if hp == "cmc":
+            cmcMsg = CoinMarketCap.coinStats()
+            await client.send_message(message.channel, embed=cmcMsg)
 def coinData(pair, exch):
     exch = exch.lower()
     pair = pair.replace("-", "_")
@@ -228,11 +229,12 @@ def help():
 
     cmdCoin = "`.pair <currency pair> <exchange>` - Returns market data for the specified coin/exchange.\n\n\t- Example: `^pair BTC_LTC Poloniex`\n" \
               "\t- Note: Some exchanges require a different pair combo (LTC_BTC)\n"
-    cmdHelp = "\t`+help` - Returns information about Tales-From-the-Cryptos.\n\n"
-    embed.add_field(name="Supported Commands", value=cmdCoin + cmdHelp)
+    cmdHelp = "\t`+help` - Returns information about Tales-From-the-Cryptos.\n"
+    cmdCmc = "\t`+cmc` - Returns the top 5 coins on CoinMarketCap\n\n"
+    embed.add_field(name="Supported Commands", value=cmdCoin + cmdHelp + cmdCmc)
 
-    lookup = """For simple currency information, !coin will return data on the single coin."""
-    embed.add_field(name="Single Currency Lookup", value=lookup)
+    # lookup = """For simple currency information, !coin will return data on the single coin."""
+    # embed.add_field(name="Single Currency Lookup", value=lookup)
 
     github = "This project is a work in progress and was derived from Satoshi bot, found at https://github.com/cmsart/Satoshi`\n"
     thanks = "-Thanks for helping me open the door to PYTHON.-"
