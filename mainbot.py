@@ -8,7 +8,6 @@ import kucoinWrap
 import krakenWrap
 import nanexWrap
 import cryptopiaWrap
-import sys
 
 Client = discord.Client()
 client = commands.Bot(command_prefix = "?")
