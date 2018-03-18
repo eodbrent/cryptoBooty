@@ -8,8 +8,8 @@ import kucoinWrap
 import krakenWrap
 import nanexWrap
 import cryptopiaWrap
-import sys
-
+import requests
+import os
 Client = discord.Client()
 client = commands.Bot(command_prefix = "?")
 #TODO COINMARKETCAP TOP 5
@@ -20,6 +20,9 @@ client = commands.Bot(command_prefix = "?")
 
 @client.event
 async def on_ready():
+    heroku.from_key()
+    test = requests.get("https://api.heroku.com/apps/talesfromthecryptos/config-vars")
+    print(test)
     print("BOT IS RUNNING!")
     #
     # start logging /primarily for adding new coins or exchanges
@@ -249,4 +252,4 @@ def formError(error):
     return nextTry
 
 
-client.run(sys.argv[1])
+client.run(os.environ.get('BOT_TOKEN',None))
