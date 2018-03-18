@@ -1,6 +1,6 @@
 import requests
 import discord
-
+import CoinMarketCap
 # Returns ticker data from Binance for the given currency pair
 def getTickerData(pair):
     url = "https://api.binance.com/api/v1/ticker/24hr?symbol=" + pair
@@ -13,7 +13,10 @@ def getTickerData(pair):
 
 # Returns formatted market data for the bot to send
 def getTickerMessage(ticker, pair):
-    header = "(" + pair + ") - Binance"
+    pairPri = pair[:-3]
+    coin = CoinMarketCap.getReadableCoinName(pairPri)
+
+    header = coin + " (" + pairPri + ") - Binance"
     price = "Current Price: `" + ticker["lastPrice"] + "`\n"
     high = "24hr High: `" + ticker["highPrice"] + "`\n"
     low = "24hr Low: `" + ticker["lowPrice"] + "`\n"
