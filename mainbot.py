@@ -249,4 +249,4 @@ def formError(error):
     return nextTry
 
 
-client.run(sys.argv[1])
+client.run(BOT_TOKEN)
