@@ -52,6 +52,6 @@ def getTickerMessage(ticker, pair):
         col = 0x00ff00
 
     embed = discord.Embed(title = header, description = data, color = col)
-    embed.set_footer(text = "FOOTER")
+    embed.set_footer(text = "")
 
     return embed
