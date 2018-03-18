@@ -2,7 +2,6 @@ import requests
 import discord
 import CoinMarketCap
 
-
 def getTickerData(pair):
     url = "https://nanex.co/api/public/ticker/" + pair
     ticker = requests.get(url)
@@ -23,13 +22,12 @@ def getTickerMessage(ticker, pair):
     # pair = CoinMarketCap.search()
     pairN = pair[3:]
     coin = CoinMarketCap.getReadableCoinName(pairN)
-    print(ticker)
     flLast = float(ticker["last_trade"])
     #flHigh = float(ticker[pair]["h"][1])
     #flLow = float(ticker["l"][1])
     flVol = float(ticker["quote_volume"])
     flOpen = float(ticker["price_change"])
-    header = "(" + coin + ") - Nanex"
+    header = coin + " (" + pairN + ") - Nanex"
     price = "Current Price: `" + "{:.2f}".format(flLast) + "`\n"
     high = "24hr High: `" + "not supported by Nanex`\n"
     low = "24hr Low: `" + "not supported by Nanex`\n"

@@ -1,17 +1,6 @@
 import requests
 import discord
 import CoinMarketCap
-def getPairs():
-    url = "https://bittrex.com/api/v1.1/public/getmarkets"
-    ticker = requests.get(url)
-    if ticker.status_code == 200:
-        data = ticker.json()["result"]
-        currencies = data
-    pairsList = []
-    for result in currencies:
-        pairs = result["BaseCurrency"] + "_" + result["MarketCurrency"]
-        pairsList.append(pairs)
-    return pairsList
 
 def getReadableCoinName(coin):
     url = "https://bittrex.com/api/v1.1/public/getcurrencies"
@@ -41,7 +30,7 @@ def getTickerMessage(ticker, pair):
     ticker = ticker[0]
     coin = getReadableCoinName(pair.split("-")[1])
 
-    header = " (" + coin + ") - Bittrex (default)"
+    header = coin + " (" + pair.split("-")[1] + ") - Bittrex (default)"
     price = "Current Price: `" + "{:.8f}".format(ticker["Last"]) + "`\n"
     high = "24hr High: `" + "{:.8f}".format(ticker["High"]) + "`\n"
     low = "24hr Low: `" + "{:.8f}".format(ticker["Low"]) + "`\n"

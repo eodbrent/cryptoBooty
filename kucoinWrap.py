@@ -3,6 +3,7 @@ import requests
 import discord
 import CoinMarketCap
 import re
+
 # data: "coinType":"XRB"
 # Returns ticker data from Kucoin for the given currency pair
 def getTickerData(pair):
@@ -17,13 +18,9 @@ def getTickerData(pair):
 # TODO PUT IN DOLLAR VALUE
 def getTickerMessage(ticker, pair):
 
-    #search for the name with coinmarketcap
-
-    #switch pair to send to coinmarketcap class 'LTC'_BTC
-    # pair = CoinMarketCap.search()
     coin = CoinMarketCap.getReadableCoinName(ticker["coinType"])
 
-    header = "(" + coin + ") - Kucoin"
+    header = coin + " (" + ticker["coinType"] + ") - Kucoin"
     price = "Current Price: `" + "{:.8f}".format(ticker["lastDealPrice"]) + "`\n"
     high = "24hr High: `" + "{:.8f}".format(ticker["high"]) + "`\n"
     low = "24hr Low: `" + "{:.8f}".format(ticker["low"]) + "`\n"

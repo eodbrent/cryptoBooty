@@ -59,6 +59,6 @@ def getTickerMessage(ticker):
     data = "Current Price: `" + "{:.2f}".format(ticker["rate_float"]) + " " + ticker["code"] + "`"
 
     embed = discord.Embed(title = header, description = data, color = 0xFF9900)
-    embed.set_footer(text = "For more information about Satoshi, type +help")
+    embed.set_footer(text = "For more information about Tales-From-The-Cryptos, type +help")
 
     return embed

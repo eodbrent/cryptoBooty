@@ -13,17 +13,6 @@ def getPairs():
         pairsList.append(result)
     return pairsList
 
-    # def getReadableCoinName(coin):
-    #     url = "https://api.coinmarketcap.com/v1/ticker/"
-    #
-    #     ticker = requests.get(url)
-    #     if ticker.status_code == 200:
-    #         data = ticker.json()
-    #         currencies = data
-    #         for symbol in currencies:
-    #             if symbol["symbol"] == coin:
-    #                 return symbol["name"]
-    #     # return None
 def getTickerData(pair):
     #pairsplit = pair.split("_")
     #pair = pairsplit[1] + pairsplit[0]
@@ -42,8 +31,6 @@ def getTickerData(pair):
 # TODO PUT IN DOLLAR VALUE
 def getTickerMessage(ticker, pair):
 
-    #switch pair to send to coinmarketcap class 'LTC'_BTC
-    # pair = CoinMarketCap.search()
     pairN = pair[:-3]
     coin = CoinMarketCap.getReadableCoinName(pairN)
 
@@ -52,7 +39,7 @@ def getTickerMessage(ticker, pair):
     flLow = float(ticker[pair]["l"][1])
     flVol = float(ticker[pair]["v"][1])
     flOpen = float(ticker[pair]["o"])
-    header = "(" + coin + ") - Kraken"
+    header = coin + " (" + pairN + ") - Kraken"
     price = "Current Price: `" + "{:.2f}".format(flLast) + "`\n"
     high = "24hr High: `" + "{:.2f}".format(flHigh) + "`\n"
     low = "24hr Low: `" + "{:.2f}".format(flLow) + "`\n"

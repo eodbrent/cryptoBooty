@@ -13,4 +13,4 @@ def getReadableCoinName(coin):
         for symbol in currencies:
             if symbol["symbol"] == coin:
                 return symbol["name"]
-    return None
+    return coin

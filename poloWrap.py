@@ -34,7 +34,7 @@ def getTickerData(pair):
 # Returns formatted market data for the bot to send
 def getTickerMessage(ticker, pair):
     coin = getReadableCoinName(pair.split("_")[1])
-    header = coin + " (" + pair + ") - Poloniex"
+    header = coin + " (" + pair.split("_")[1] + ") - Poloniex"
     price = "Current Price: `" + ticker["last"] + "`\n"
     high = "24hr High: `" + ticker["high24hr"] + "`\n"
     low = "24hr Low: `" + ticker["low24hr"] + "`\n"
