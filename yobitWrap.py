@@ -2,6 +2,7 @@ import requests
 import discord
 import CoinMarketCap
 # Returns ticker data from Binance for the given currency pair
+
 # TODO GET FULL NAME FOR CURRENCY
 def getTickerData(pair):
     url = "https://yobit.net/api/3/ticker/" + pair
@@ -20,7 +21,7 @@ def getTickerMessage(ticker, pair):
     #switch pair to send to coinmarketcap class 'LTC'_BTC
     pairPri = pair.split('_')[0]
     coin = CoinMarketCap.getReadableCoinName(pairPri)
-    header = "(" + coin + ") - YObit"
+    header = coin + " (" + pairPri + ") - YObit"
     price = "Current Price: `" + "{:.8f}".format(ticker["last"]) + "`\n"
     high = "24hr High: `" + "{:.8f}".format(ticker["high"]) + "`\n"
     low = "24hr Low: `" + "{:.8f}".format(ticker["low"]) + "`\n"
