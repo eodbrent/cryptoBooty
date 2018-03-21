@@ -236,7 +236,7 @@ def help():
     intro = "You have asked for help, and you shall have it"
     embed = discord.Embed(title=title, description=intro, color=0x0000ff)
 
-    exchanges = "The exchanges currently supported are: `Binance`, `Bittrex`, `Cryptopia`, `Kraken`, `Kucoin`, `Nanex`, `Poloniex`, `YObit`\n\n"
+    exchanges = "The exchanges currently supported are: `Binance`, `Bittrex`, `CoinExchange`, `Cryptopia`, `Kraken`, `Kucoin`, `Nanex`, `Poloniex`, `YObit`\n\n"
     embed.add_field(name="Supported Exchanges", value=exchanges)
 
     cmdCoin = "`.pair <currency pair> <exchange>` - Returns market data for the specified coin/exchange.\n\n\t- Example: `^pair BTC_LTC Poloniex`\n" \
