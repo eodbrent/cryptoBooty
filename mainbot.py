@@ -71,7 +71,7 @@ async def on_message(message):
     #    await client.send_message(message.channel, "Going to search for " + coin)
     #    coinMsg = findCoin(coin)
     #    await client.send_message(message.channel, coinMsg)
-    elif msg.startswith('+'):
+    elif msg.startswith('-'):
         sp = split[0:]
         hp = sp[0]
         hp = hp[1:].lower()
