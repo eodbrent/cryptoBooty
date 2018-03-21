@@ -262,4 +262,4 @@ def formError(error):
     nextTry = "```prolog\nERROR: " + error + "\n" + footer + "\n```"
     return nextTry
 
-client.run("NDI0OTkwODY4MDEzODQyNDMz.DZA7IA.ABFAGgFBZKY9b7fi3w34AHXHYHc")
+client.run(os.environ.get('BOT_TOKEN',None))
