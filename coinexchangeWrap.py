@@ -46,7 +46,7 @@ def getTickerMessage(ticker, pair):
     flLow = float(data["LowPrice"])
     flVol = float(data["Volume"])
     flChange = float(data["Change"])
-    header = coin + " (" + pair + ") - CurrencyExchange"
+    header = coin + " (" + pair + ") - CoinExchange"
     price = "Current Price: `" + "{:.8f}".format(flLast) + "`\n"
     high = "24hr High: `" + "{:.8f}".format(flHigh) + "`\n"
     low = "24hr Low: `" + "{:.8f}".format(flLow) + "`\n"
