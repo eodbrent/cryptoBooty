@@ -9,6 +9,7 @@ import krakenWrap
 import nanexWrap
 import cryptopiaWrap
 import CoinMarketCap
+import coinexchangeWrap
 import os
 
 Client = discord.Client()
@@ -64,13 +65,13 @@ async def on_message(message):
         else:
             await client.send_message(message.channel, "Unsuccessful: " + pair + " is not pair")
             await client.send_message(message.channel, "Checking command...")
-    #elif msg.startswith('!'):
-    #    sp = split[0:]
-    #    coin = sp[0]
-    #    coin = coin[1:].upper()
-    #    await client.send_message(message.channel, "Going to search for " + coin)
-    #    coinMsg = findCoin(coin)
-    #    await client.send_message(message.channel, coinMsg)
+    elif msg.startswith('!'):
+        sp = split[0:]
+        coin = sp[0]
+        coin = coin[1:].upper()
+        await client.send_message(message.channel, "Going to search for " + coin)
+        coinMsg = findCoin(coin)
+        await client.send_message(message.channel, coinMsg)
     elif msg.startswith('-'):
         sp = split[0:]
         hp = sp[0]
@@ -106,6 +107,12 @@ def coinData(pair, exch):
                 return coinMsg
             else:
                 return formError("No return from server")
+        elif exch == "coinexchange":
+            pairFmt = formPair(exch, pair)
+            ticker = coinexchangeWrap.getTickerData(pairFmt)
+            if ticker:
+                coinMsg = coinexchangeWrap.getTickerMessage(ticker, pairFmt)
+                return coinMsg
         elif exch == 'cryptopia':
             pairFmt = formPair(exch, pair)
             ticker = cryptopiaWrap.getTickerData(pairFmt)
@@ -173,6 +180,11 @@ def formPair(exch, pair):
         pair = pair.replace("_", "-")
         pair = pair.upper()
         return pair
+    elif exch == "coinexchange": # ex BTC_LTC (Just need tickercode = LTC)
+        pairsplit = pair.split("_")
+        pair = pairsplit[1]
+        pair = pair.upper()
+        return pair
     elif exch == "cryptopia": # ex LTC/BTC
         pairsplit = pair.split("_")
         pair = pairsplit[1] + "_" + pairsplit[0]
@@ -229,8 +241,8 @@ def help():
 
     cmdCoin = "`.pair <currency pair> <exchange>` - Returns market data for the specified coin/exchange.\n\n\t- Example: `^pair BTC_LTC Poloniex`\n" \
               "\t- Note: Some exchanges require a different pair combo (LTC_BTC)\n"
-    cmdHelp = "\t`-help` - Returns information about Tales-From-the-Cryptos.\n"
-    cmdCmc = "\t`-cmc` - Returns the top 5 coins on CoinMarketCap\n\n"
+    cmdHelp = "\t`+help` - Returns information about Tales-From-the-Cryptos.\n"
+    cmdCmc = "\t`+cmc` - Returns the top 5 coins on CoinMarketCap\n\n"
     embed.add_field(name="Supported Commands", value=cmdCoin + cmdHelp + cmdCmc)
 
     # lookup = """For simple currency information, !coin will return data on the single coin."""
@@ -245,8 +257,8 @@ def help():
 #format error function
 def formError(error):
     embed = discord.Embed(title="ERROR", description=error, color=0xFF0000)
-    embed.set_footer(text="Ask for help numbnuts (-help)")
-    footer = "Ask for help numbnuts (-help)"
+    embed.set_footer(text="Ask for help numbnuts (+help)")
+    footer = "Ask for help numbnuts (+help)"
     nextTry = "```prolog\nERROR: " + error + "\n" + footer + "\n```"
     return nextTry
 
