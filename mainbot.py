@@ -8,8 +8,10 @@ import kucoinWrap
 import krakenWrap
 import nanexWrap
 import cryptopiaWrap
-import requests
+import CoinMarketCap
+import coinexchangeWrap
 import os
+
 Client = discord.Client()
 client = commands.Bot(command_prefix = "?")
 #TODO COINMARKETCAP TOP 5
@@ -20,9 +22,6 @@ client = commands.Bot(command_prefix = "?")
 
 @client.event
 async def on_ready():
-    heroku.from_key()
-    test = requests.get("https://api.heroku.com/apps/talesfromthecryptos/config-vars")
-    print(test)
     print("BOT IS RUNNING!")
     #
     # start logging /primarily for adding new coins or exchanges
@@ -42,20 +41,19 @@ async def on_message(message):
     if msg.startswith('.'):
         #this is what we want, so split it.  Don't do anything otherwise.
         sp = split[0:]
-        await client.send_message(message.channel, "first = "+sp[0]+" second = "+sp[1])
+        #await client.send_message(message.channel, "first = "+sp[0]+" second = "+sp[1])
         pair = sp[0]
         pair = pair[1:5]
         curr = sp[1]
         if pair == "pair":
-            await client.send_message(message.channel, "Your chosen pair is " + curr)
+            #await client.send_message(message.channel, "Your chosen pair is " + curr)
             pair = curr.upper()
             try:
                 exch = sp[2]
-                await client.send_message(message.channel, "Your preferred exchange is " + exch)
+                #await client.send_message(message.channel, "Your preferred exchange is " + exch)
             except:
                 exch = 'bittrex'
-                await client.send_message(message.channel, "No exchange chosen, default is bittrex.")
-                return
+                #await client.send_message(message.channel, "No exchange chosen, default is bittrex.")
             try:
                 pairMsg = coinData(pair, exch)
                 await client.send_message(message.channel, embed=pairMsg)
@@ -74,15 +72,16 @@ async def on_message(message):
         await client.send_message(message.channel, "Going to search for " + coin)
         coinMsg = findCoin(coin)
         await client.send_message(message.channel, coinMsg)
-    elif msg.startswith('+'):
+    elif msg.startswith('-'):
         sp = split[0:]
         hp = sp[0]
         hp = hp[1:].lower()
         if hp == "help":
             helpMsg = help()
             await client.send_message(message.author, embed=helpMsg)
-
-
+        if hp == "cmc":
+            cmcMsg = CoinMarketCap.coinStats()
+            await client.send_message(message.channel, embed=cmcMsg)
 def coinData(pair, exch):
     exch = exch.lower()
     pair = pair.replace("-", "_")
@@ -108,6 +107,12 @@ def coinData(pair, exch):
                 return coinMsg
             else:
                 return formError("No return from server")
+        elif exch == "coinexchange":
+            pairFmt = formPair(exch, pair)
+            ticker = coinexchangeWrap.getTickerData(pairFmt)
+            if ticker:
+                coinMsg = coinexchangeWrap.getTickerMessage(ticker, pairFmt)
+                return coinMsg
         elif exch == 'cryptopia':
             pairFmt = formPair(exch, pair)
             ticker = cryptopiaWrap.getTickerData(pairFmt)
@@ -175,6 +180,11 @@ def formPair(exch, pair):
         pair = pair.replace("_", "-")
         pair = pair.upper()
         return pair
+    elif exch == "coinexchange": # ex BTC_LTC (Just need tickercode = LTC)
+        pairsplit = pair.split("_")
+        pair = pairsplit[1]
+        pair = pair.upper()
+        return pair
     elif exch == "cryptopia": # ex LTC/BTC
         pairsplit = pair.split("_")
         pair = pairsplit[1] + "_" + pairsplit[0]
@@ -231,11 +241,12 @@ def help():
 
     cmdCoin = "`.pair <currency pair> <exchange>` - Returns market data for the specified coin/exchange.\n\n\t- Example: `^pair BTC_LTC Poloniex`\n" \
               "\t- Note: Some exchanges require a different pair combo (LTC_BTC)\n"
-    cmdHelp = "\t`+help` - Returns information about Tales-From-the-Cryptos.\n\n"
-    embed.add_field(name="Supported Commands", value=cmdCoin + cmdHelp)
+    cmdHelp = "\t`+help` - Returns information about Tales-From-the-Cryptos.\n"
+    cmdCmc = "\t`+cmc` - Returns the top 5 coins on CoinMarketCap\n\n"
+    embed.add_field(name="Supported Commands", value=cmdCoin + cmdHelp + cmdCmc)
 
-    lookup = """For simple currency information, !coin will return data on the single coin."""
-    embed.add_field(name="Single Currency Lookup", value=lookup)
+    # lookup = """For simple currency information, !coin will return data on the single coin."""
+    # embed.add_field(name="Single Currency Lookup", value=lookup)
 
     github = "This project is a work in progress and was derived from Satoshi bot, found at https://github.com/cmsart/Satoshi`\n"
     thanks = "-Thanks for helping me open the door to PYTHON.-"
@@ -251,5 +262,4 @@ def formError(error):
     nextTry = "```prolog\nERROR: " + error + "\n" + footer + "\n```"
     return nextTry
 
-
-client.run(os.environ.get('BOT_TOKEN',None))
+client.run("NDI0OTkwODY4MDEzODQyNDMz.DZA7IA.ABFAGgFBZKY9b7fi3w34AHXHYHc")
