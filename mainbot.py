@@ -241,8 +241,8 @@ def help():
 
     cmdCoin = "`.pair <currency pair> <exchange>` - Returns market data for the specified coin/exchange.\n\n\t- Example: `^pair BTC_LTC Poloniex`\n" \
               "\t- Note: Some exchanges require a different pair combo (LTC_BTC)\n"
-    cmdHelp = "\t`+help` - Returns information about Tales-From-the-Cryptos.\n"
-    cmdCmc = "\t`+cmc` - Returns the top 5 coins on CoinMarketCap\n\n"
+    cmdHelp = "\t`-help` - Returns information about Tales-From-the-Cryptos.\n"
+    cmdCmc = "\t`-cmc` - Returns the top 5 coins on CoinMarketCap\n\n"
     embed.add_field(name="Supported Commands", value=cmdCoin + cmdHelp + cmdCmc)
 
     # lookup = """For simple currency information, !coin will return data on the single coin."""
@@ -257,8 +257,8 @@ def help():
 #format error function
 def formError(error):
     embed = discord.Embed(title="ERROR", description=error, color=0xFF0000)
-    embed.set_footer(text="Ask for help numbnuts (+help)")
-    footer = "Ask for help numbnuts (+help)"
+    embed.set_footer(text="Ask for help numbnuts (-help)")
+    footer = "Ask for help numbnuts (-help)"
     nextTry = "```prolog\nERROR: " + error + "\n" + footer + "\n```"
     return nextTry
 
