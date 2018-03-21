@@ -65,13 +65,13 @@ async def on_message(message):
         else:
             await client.send_message(message.channel, "Unsuccessful: " + pair + " is not pair")
             await client.send_message(message.channel, "Checking command...")
-    elif msg.startswith('!'):
-        sp = split[0:]
-        coin = sp[0]
-        coin = coin[1:].upper()
-        await client.send_message(message.channel, "Going to search for " + coin)
-        coinMsg = findCoin(coin)
-        await client.send_message(message.channel, coinMsg)
+    #elif msg.startswith('!'):
+    #    sp = split[0:]
+    #    coin = sp[0]
+    #    coin = coin[1:].upper()
+    #    await client.send_message(message.channel, "Going to search for " + coin)
+    #    coinMsg = findCoin(coin)
+    #    await client.send_message(message.channel, coinMsg)
     elif msg.startswith('-'):
         sp = split[0:]
         hp = sp[0]
