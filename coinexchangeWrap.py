@@ -1,6 +1,7 @@
 import requests
 import discord
 import CoinMarketCap
+import coindeskWrap
 
 #TODO FIRST - GET the correct market ID using the pair
 def getID(pair):
@@ -35,35 +36,38 @@ def getTickerData(pair):
 
 
 # Returns formatted market data for the bot to send
-# TODO PUT IN DOLLAR VALUE
-def getTickerMessage(ticker, pair):
+def getTickerMessage(ticker, pair, fiat):
     pairID = getID(pair)
     coin = pairID[1]
-    data = getTickerData(pair)
+    tick = getTickerData(pair)
 
-    flLast = float(data["LastPrice"])
-    flHigh = float(data["HighPrice"])
-    flLow = float(data["LowPrice"])
-    flVol = float(data["Volume"])
-    flChange = float(data["Change"])
-    header = coin + " (" + pair + ") - CoinExchange"
-    price = "Current Price: `" + "{:.8f}".format(flLast) + "`\n"
-    high = "24hr High: `" + "{:.8f}".format(flHigh) + "`\n"
-    low = "24hr Low: `" + "{:.8f}".format(flLow) + "`\n"
-    volume = "24hr Volume: `" + "{:.8f}".format(flVol) + "`\n"
+    flLast = float(tick["LastPrice"])
+    flChange = float(tick["Change"])
+    price = "Current Price: `" + "{:.8f}".format(flLast)
+    if fiat:
+        fiatConv = coindeskWrap.getTickerData(fiat)
+        fin = flLast * float(fiatConv["rate_float"])
+        fiatDisplay = " / {:.2f}".format(fin) + " " + fiat + "`\n"
+    else:
+        btc = coindeskWrap.getTickerData("USD")
+        fin = flLast * btc["rate_float"]
+        fiatDisplay = " / {:.2f}".format(fin) + " USD`\n"
+
+    final = price + fiatDisplay
+    header = coin + " (" + pair + ")"
 
     changeNum = flChange
     sign = "+" if changeNum > 0 else ""
-    change = "Percent Change: ```diff\n" + sign + "{:.2f}".format(changeNum) + "%```"
+    change = "24hr Percent Change: ```diff\n" + sign + str(changeNum) + "%```"
 
-    data = price + volume + high + low + change
+    data = final + change
 
     if changeNum < 0:
         col = 0xFF0000
     elif changeNum > 0:
         col = 0x00ff00
 
-    embed = discord.Embed(title = header, description = data, color = col) #col
-    embed.set_footer(text = "")
+    embed = discord.Embed(title = header, description = data, color = col)
+    embed.set_footer(text = "via CoinExchange  | ?help for more bot info")
 
     return embed
