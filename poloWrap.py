@@ -2,6 +2,7 @@
 
 import requests
 import discord
+import coindeskWrap
 import CoinMarketCap
 
 # Returns the coin name for the given symbol
@@ -32,19 +33,28 @@ def getTickerData(pair):
     return None
 
 # Returns formatted market data for the bot to send
-def getTickerMessage(ticker, pair):
+def getTickerMessage(ticker, pair, fiat):
     coin = getReadableCoinName(pair.split("_")[1])
-    header = coin + " (" + pair.split("_")[1] + ") - Poloniex"
-    price = "Current Price: `" + ticker["last"] + "`\n"
-    high = "24hr High: `" + ticker["high24hr"] + "`\n"
-    low = "24hr Low: `" + ticker["low24hr"] + "`\n"
-    volume = "24hr Volume: `" + ticker["baseVolume"] + "`\n"
+
+
+    price = "Current Price: `" + ticker["last"]
+    if fiat:
+        fiatConv = coindeskWrap.getTickerData(fiat)
+        fin = float(ticker["last"]) * float(fiatConv["rate_float"])
+        fiatDisplay = " / {:.2f}".format(fin) + " " + fiat + "`\n"
+    else:
+        btc = coindeskWrap.getTickerData("USD")
+        fin = float(ticker["last"]) * btc["rate_float"]
+        fiatDisplay = " / {:.2f}".format(fin) + " USD`\n"
+
+    final = price + fiatDisplay
+    header = coin + " (" + pair.split("_")[1] + ")"
 
     changeNum = round((float(ticker["percentChange"]) * 100), 2)
     sign = "+" if changeNum > 0 else ""
-    change = "Percent Change: ```diff\n" + sign + str(changeNum) + "%```"
+    change = "24hr Percent Change: ```diff\n" + sign + str(changeNum) + "%```"
 
-    data = price + volume + high + low + change
+    data = final + change
 
     if changeNum < 0:
         col = 0xFF0000
@@ -52,6 +62,6 @@ def getTickerMessage(ticker, pair):
         col = 0x00ff00
 
     embed = discord.Embed(title = header, description = data, color = col)
-    embed.set_footer(text = "")
+    embed.set_footer(text = "via Poloniex | ?help for more bot info")
 
     return embed
