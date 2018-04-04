@@ -1,6 +1,7 @@
 import requests
 import discord
 import CoinMarketCap
+import coindeskWrap
 
 def getTickerData(pair):
     url = "https://nanex.co/api/public/ticker/" + pair
@@ -13,38 +14,41 @@ def getTickerData(pair):
 
 
 # Returns formatted market data for the bot to send
-# TODO PUT IN DOLLAR VALUE
-def getTickerMessage(ticker, pair):
-
-    #search for the name with coinmarketcap
-
-    #switch pair to send to coinmarketcap class 'LTC'_BTC
-    # pair = CoinMarketCap.search()
+def getTickerMessage(ticker, pair, fiat):
+    pair = pair.upper()
     pairN = pair[3:]
+    pairU = pair[:-4]
     coin = CoinMarketCap.getReadableCoinName(pairN)
+
+    notNano = CoinMarketCap.getCoinData(pairU)
+
     flLast = float(ticker["last_trade"])
-    #flHigh = float(ticker[pair]["h"][1])
-    #flLow = float(ticker["l"][1])
-    flVol = float(ticker["quote_volume"])
     flOpen = float(ticker["price_change"])
-    header = coin + " (" + pairN + ") - Nanex"
-    price = "Current Price: `" + "{:.2f}".format(flLast) + "`\n"
-    high = "24hr High: `" + "not supported by Nanex`\n"
-    low = "24hr Low: `" + "not supported by Nanex`\n"
-    volume = "24hr Volume: `" + "{:.2f}".format(flVol) + "`\n"
+
+    price = "Current Price: `" + "{:.2f}".format(flLast) + " " + coin + " per " + pairU
+    if fiat:
+        fiatConv = coindeskWrap.getTickerData(fiat)
+        fin = float(fiatConv["rate_float"]) / flLast
+        fiatDisplay = " / {:.2f}".format(fin) + " " + fiat + "`\n"
+    else:
+        fin = float(notNano["price_usd"]) / flLast
+        fiatDisplay = " / {:.2f}".format(fin) + " USD`\n"
+
+    final = price + fiatDisplay
+    header = coin + " (" + pairN + ")"
 
     changeNum = flOpen
     sign = "+" if changeNum > 0 else ""
     change = "Percent Change: ```diff\n" + sign + "{:.2f}".format(changeNum) + "%```"
 
-    data = price + volume + high + low + change
+    data = final + change
 
     if changeNum < 0:
         col = 0xFF0000
     elif changeNum > 0:
         col = 0x00ff00
 
-    embed = discord.Embed(title = header, description = data, color = col) #col
-    embed.set_footer(text = "")
+    embed = discord.Embed(title = header, description = data, color = col)
+    embed.set_footer(text = "via Nanex | ?help for more bot info")
 
     return embed
