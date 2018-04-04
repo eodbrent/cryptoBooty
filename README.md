@@ -1,6 +1,8 @@
 # cryptoBooty
 A cryptocurrency Discord bot, expanded from Satoshi Bot
 
+Current supported exchanges: Binance, Bittrex, CoinExchange, CryptoBridge, Cryptopia, Kraken (not anymore, their API is terrible), Kucoin, Nanex, Poloniex, Stocks.Exchange (not anymore, their API is terrible...and stingy), TradeSatoshi and YoBit.
+
 Full README Coming soon
 
 Bot is now hosted.  I'm using it to learn Python, and slowly expanding it.
