@@ -1,6 +1,7 @@
 import requests
 import discord
 import CoinMarketCap
+import coindeskWrap
 # Returns ticker data from Binance for the given currency pair
 
 # TODO GET FULL NAME FOR CURRENCY
@@ -14,31 +15,38 @@ def getTickerData(pair):
 
 # Returns formatted market data for the bot to send
 # TODO PUT IN DOLLAR VALUE
-def getTickerMessage(ticker, pair):
-
-    #search for the name with coinmarketcap
-
-    #switch pair to send to coinmarketcap class 'LTC'_BTC
+def getTickerMessage(ticker, pair, fiat):
+    pair = pair.upper()
     pairPri = pair.split('_')[0]
     coin = CoinMarketCap.getReadableCoinName(pairPri)
-    header = coin + " (" + pairPri + ") - YObit"
-    price = "Current Price: `" + "{:.8f}".format(ticker["last"]) + "`\n"
-    high = "24hr High: `" + "{:.8f}".format(ticker["high"]) + "`\n"
-    low = "24hr Low: `" + "{:.8f}".format(ticker["low"]) + "`\n"
-    volume = "24hr Volume: `" + "{:.8f}".format(ticker["vol"]) + "`\n"
 
-    #changeNum = float(ticker["priceChangePercent"])
-    #sign = "+" if changeNum > 0 else ""
-    #change = "Percent Change: ```diff\n" + sign + "{:.2f}".format(changeNum) + "%```"
+    price = "Current Price: `" + "{:.8f}".format(ticker["last"])
+    if fiat:
+        fiatConv = coindeskWrap.getTickerData(fiat)
+        fin = float(ticker["last"]) * float(fiatConv["rate_float"])
+        fiatDisplay = " / {:.2f}".format(fin) + " " + fiat + "`\n"
+    else:
+        btc = coindeskWrap.getTickerData("USD")
+        fin = float(ticker["last"]) * btc["rate_float"]
+        fiatDisplay = " / {:.2f}".format(fin) + " USD`\n"
 
-    data = price + volume + high + low # change
+    final = price + fiatDisplay
+    header = coin + " (" + pairPri + ")"
+
+    # changeNum = round(((ticker["Last"] - ticker["PrevDay"]) / ticker["PrevDay"]) * 100, 2)
+    # sign = "+" if changeNum > 0 else ""
+    # change = "24hr Percent Change: ```diff\n" + sign + str(changeNum) + "%```"
+    change = "24hr Percent Change: ```diff\n Not supported by TradeSatoshi API```"
+
+    data = final + change
 
     # if changeNum < 0:
     #     col = 0xFF0000
     # elif changeNum > 0:
     #     col = 0x00ff00
+    col = 0x630057  # just make it purple for now, until yobit supports change %
 
-    embed = discord.Embed(title = header, description = data, color = 0xFF0000) #col
-    embed.set_footer(text = "")
+    embed = discord.Embed(title = header, description = data, color = col)
+    embed.set_footer(text = "via YoBit | ?help for more bot info")
 
     return embed
