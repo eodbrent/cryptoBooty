@@ -6,7 +6,7 @@ Current supported exchanges: Binance, Bittrex, CoinExchange, CryptoBridge, Crypt
 Full README Coming soon
 
 Bot is now hosted.  I'm using it to learn Python, and slowly expanding it.
-Click [here](https://discordapp.com/api/oauth2/authorize?client_id=424593076552728605&permissions=89152&scope=bot) to invite the bot to your server.
+Click [here](https://discordapp.com/api/oauth2/authorize?client_id=431919810591326208&permissions=89152&scope=bot) to invite the bot to your server.
 
 For the original Satoshi bot, please see:
 https://github.com/cmsart/Satoshi
