@@ -75,7 +75,8 @@ def searchCoin(pair, sptExch, num, fiat):
         searchCoin(pair, sptExch, num, fiat)
 
     i = num
-    while i <= len(sptExch):
+
+    while i < len(sptExch):
         fmtPair = formPair(sptExch[i], pair)
         try:
             result = wrap[i].getTickerData(fmtPair)
@@ -85,8 +86,9 @@ def searchCoin(pair, sptExch, num, fiat):
         except:
             print("not on that exchange")
         i += 1
-    return formError(pair + " is not found on exchanges supported by this bot - weird, cause it has a lot!\n"
-                            "or, something went terribly wrong and logging isn't built in yet.")
+    error = formError(pair + " is not found on exchanges supported by this bot - weird, cause it has a lot!  "
+                            "Or, something went terribly wrong and logging isn't built in yet.")
+    return error
 
 
 def formPair(exch, pair):
@@ -180,8 +182,10 @@ def help():
 
 #format error function
 def formError(error):
-    footer = "Logging coming when a write/server option can be figured out."
-    nextTry = "```prolog\nERROR: " + error + "\n" + footer + "\n```"
-    return nextTry
+    title = "Uh Oh"
+    embed = discord.Embed(title=title, description='', color=0xff0000)
+    embed.add_field(name="Error", value=error)
+    embed.set_footer(text="Logging coming. ?help for more bot info")
+    return embed
 
 client.run(os.environ.get('BOT_TOKEN',None))
