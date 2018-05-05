@@ -9,7 +9,11 @@ def getTickerData(pair):
 
     ticker = requests.get(url)
     if ticker.status_code == 200:
-        return ticker.json()["result"]
+        result = ticker.json()["result"]
+        if result["market"] == None:
+            return None
+        else:
+            return result
     return None
 
 def getTickerMessage(ticker, pair, fiat):
