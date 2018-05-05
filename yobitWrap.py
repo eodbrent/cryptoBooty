@@ -9,8 +9,11 @@ def getTickerData(pair):
     url = "https://yobit.net/api/3/ticker/" + pair
     ticker = requests.get(url)
     if ticker.status_code == 200:
-        return ticker.json()[pair]
-
+        result = ticker.json()[pair]
+        if result["error"]:
+            return None
+        else:
+            return ticker.json()[pair]
     return None
 
 # Returns formatted market data for the bot to send
@@ -36,7 +39,7 @@ def getTickerMessage(ticker, pair, fiat):
     # changeNum = round(((ticker["Last"] - ticker["PrevDay"]) / ticker["PrevDay"]) * 100, 2)
     # sign = "+" if changeNum > 0 else ""
     # change = "24hr Percent Change: ```diff\n" + sign + str(changeNum) + "%```"
-    change = "24hr Percent Change: ```diff\n Not supported by TradeSatoshi API```"
+    change = "24hr Percent Change: ```diff\n Not supported by YoBit API```"
 
     data = final + change
 
